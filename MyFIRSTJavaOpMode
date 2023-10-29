@@ -1,0 +1,88 @@
+/*
+Copyright 2023 FIRST Tech Challenge Team FTC
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+associated documentation files (the "Software"), to deal in the Software without restriction,
+including without limitation the rights to use, copy, modify, merge, publish, distribute,
+sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial
+portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.hardware.Blinker;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+/**
+ * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
+ * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
+ * of the FTC Driver Station. When an selection is made from the menu, the corresponding OpMode
+ * class is instantiated on the Robot Controller and executed.
+ *
+ * This particular OpMode just executes a basic Tank Drive Teleop for a PushBot
+ * It includes all the skeletal structure that all linear OpModes contain.
+ *
+ * Remove a @Disabled the on the next line or two (if present) to add this opmode to the Driver Station OpMode list,
+ * or add a @Disabled annotation to prevent this OpMode from being added to the Driver Station
+ */
+@TeleOp
+
+public class MyFIRSTJavaOpMode extends LinearOpMode {
+    private DcMotor RFMotor;
+    private DcMotor RBMotor;
+    private DcMotor LFMotor;
+    private DcMotor LBMotor;
+
+@Override
+    public void runOpMode() {
+        RFMotor = hardwareMap.get(DcMotor.class,"RFMotor");
+        RBMotor = hardwareMap.get(DcMotor.class,"RBMotor");
+        LFMotor = hardwareMap.get(DcMotor.class,"LFMotor");
+        LBMotor = hardwareMap.get(DcMotor.class,"LBMotor");
+        RBMotor.setDirection(DcMotor.Direction.REVERSE);
+        LBMotor.setPower(-0.1);
+        RFMotor.setPower(0.1);
+        LBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RFMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LBMotor.setTargetPosition(5000);
+        RFMotor.setTargetPosition(5000);
+        LBMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        RFMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        
+        telemetry.addData("Mode", "waiting");
+        telemetry.update();
+
+        // wait for start button.
+
+        waitForStart();
+
+        telemetry.addData("Mode", "running");
+        telemetry.update();
+        
+        while (opModeIsActive() && LBMotor.isBusy())
+        {
+            telemetry.addData("encoder-fwd-left", LBMotor.getCurrentPosition() + "  busy=" + LBMotor.isBusy());
+            telemetry.addData("encoder-fwd-right", RFMotor.getCurrentPosition() + "  busy=" + RFMotor.isBusy());
+            telemetry.update();
+            idle();
+        }
+
+    }
+    
+} 
