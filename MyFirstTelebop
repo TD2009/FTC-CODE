@@ -1,0 +1,89 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+@TeleOp
+
+public class MyFirstTelebop extends LinearOpMode{
+    private DcMotor RFMotor;
+    private DcMotor RBMotor;
+    private DcMotor LFMotor;
+    private DcMotor LBMotor;
+    private CRServo LeftArmServo;
+    private CRServo RightArmServo;
+    
+    @Override
+    public void runOpMode() {
+        RFMotor = hardwareMap.get(DcMotor.class,"RFMotor");
+        RBMotor = hardwareMap.get(DcMotor.class,"RBMotor");
+        LFMotor = hardwareMap.get(DcMotor.class,"LFMotor");
+        LBMotor = hardwareMap.get(DcMotor.class,"LBMotor");
+        LeftArmServo = hardwareMap.get(CRServo.class,"LeftArmServo");
+        RightArmServo = hardwareMap.get(CRServo.class,"RightArmServo");
+        
+        telemetry.addData("Status","Running");
+        telemetry.update();
+        
+
+        telemetry.addData("Mode", "waiting");
+        telemetry.update();
+        
+        waitForStart();
+
+        telemetry.addData("Mode", "running");
+        telemetry.update();
+        
+        while (opModeIsActive()) { 
+            
+            double RtgtPowerY = 0;
+            double RtgtPowerX = 0;
+            double LtgtPowerY = 0;
+            double LtgtPowerX = 0;
+            double LeftArmPower = 0;
+            double RightArmPower = 0;
+            
+            LBMotor.setDirection(DcMotor.Direction.REVERSE);
+            RFMotor.setDirection(DcMotor.Direction.REVERSE);
+            RBMotor.setDirection(DcMotor.Direction.REVERSE);
+            
+            //diagonal code thing Not workin rn
+            RtgtPowerX=gamepad1.right_stick_x;
+            if (gamepad1.right_stick_x>0) {
+                LBMotor.setPower(RtgtPowerX);
+                RFMotor.setPower(RtgtPowerX);
+            }else if (gamepad1.right_stick_x<0) {
+                LBMotor.setPower(RtgtPowerX);
+                RFMotor.setPower(RtgtPowerX);
+            }
+                
+            RtgtPowerY=gamepad1.right_stick_y;
+            LBMotor.setPower(RtgtPowerY);
+            LFMotor.setPower(RtgtPowerY);
+            RBMotor.setPower(RtgtPowerY);
+            RFMotor.setPower(RtgtPowerY);
+            
+            LtgtPowerY = gamepad1.left_stick_y;
+            LtgtPowerX = gamepad1.right_stick_x;
+            if (LtgtPowerY>0) {
+                LBMotor.setPower(LtgtPowerY);
+                LFMotor.setPower(LtgtPowerY);
+                RBMotor.setPower(-LtgtPowerY);
+                RFMotor.setPower(-LtgtPowerY);
+            }
+            if (LtgtPowerY<0) {
+                LBMotor.setPower(LtgtPowerY);
+                LFMotor.setPower(LtgtPowerY);
+                RBMotor.setPower(-LtgtPowerY);
+                RFMotor.setPower(-LtgtPowerY);
+            }
+            LeftArmPower = gamepad1.left_trigger;
+            RightArmPower = gamepad1.right_trigger;
+            
+            LeftArmServo.setPower(-LeftArmPower);
+            RightArmServo.setPower(RightArmPower);
+        }
+    }
+} 
