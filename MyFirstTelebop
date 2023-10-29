@@ -44,6 +44,13 @@ public class MyFirstTelebop extends LinearOpMode{
             double LtgtPowerX = 0;
             double LeftArmPower = 0;
             double RightArmPower = 0;
+        
+            double ORtgtPowerY = 0;
+            double ORtgtPowerX = 0;
+            double OLtgtPowerY = 0;
+            double OLtgtPowerX = 0;
+            double OLeftArmPower = 0;
+            double ORightArmPower = 0;
             
             LBMotor.setDirection(DcMotor.Direction.REVERSE);
             RFMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -84,6 +91,52 @@ public class MyFirstTelebop extends LinearOpMode{
             
             LeftArmServo.setPower(-LeftArmPower);
             RightArmServo.setPower(RightArmPower);
+            
+            
+            
+            
+            
+            
+            
+            //diagonal code thing Not workin rn
+            ORtgtPowerX=gamepad2.right_stick_x;
+            if (gamepad2.right_stick_x>0) {
+                LBMotor.setPower(ORtgtPowerX);
+                RFMotor.setPower(ORtgtPowerX);
+            }else if (gamepad2.right_stick_x<0) {
+                LBMotor.setPower(ORtgtPowerX);
+                RFMotor.setPower(ORtgtPowerX);
+            }
+                
+            ORtgtPowerY=gamepad2.right_stick_y;
+            LBMotor.setPower(ORtgtPowerY);
+            LFMotor.setPower(ORtgtPowerY);
+            RBMotor.setPower(ORtgtPowerY);
+            RFMotor.setPower(ORtgtPowerY);
+            
+            OLtgtPowerY = gamepad1.left_stick_y;
+            if (OLtgtPowerY>0) {
+                LBMotor.setPower(OLtgtPowerY);
+                LFMotor.setPower(OLtgtPowerY);
+                RBMotor.setPower(-OLtgtPowerY);
+                RFMotor.setPower(-OLtgtPowerY);
+            }
+            if (OLtgtPowerY<0) {
+                LBMotor.setPower(OLtgtPowerY);
+                LFMotor.setPower(OLtgtPowerY);
+                RBMotor.setPower(-OLtgtPowerY);
+                RFMotor.setPower(-OLtgtPowerY);
+            }
+            if (gamepad1.dpad_up) {
+                RFMotor.setPower(0.5);
+            } else if (gamepad1.dpad_down) {
+                RFMotor.setPower(-0.5);
+            }
+            OLeftArmPower = gamepad2.left_trigger;
+            ORightArmPower = gamepad2.right_trigger;
+            
+            LeftArmServo.setPower(-OLeftArmPower);
+            RightArmServo.setPower(ORightArmPower);
         }
     }
 } 
