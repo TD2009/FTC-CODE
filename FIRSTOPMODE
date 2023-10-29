@@ -1,0 +1,69 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.hardware.Blinker;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+
+@TeleOp
+
+public class FIRSTOPMODE extends LinearOpMode {
+    private DcMotor RFMotor;
+    private DcMotor RBMotor;
+    private DcMotor LFMotor;
+    private DcMotor LBMotor;
+
+@Override
+    public void runOpMode() {
+        RFMotor = hardwareMap.get(DcMotor.class,"RFMotor");
+        RBMotor = hardwareMap.get(DcMotor.class,"RBMotor");
+        LFMotor = hardwareMap.get(DcMotor.class,"LFMotor");
+        LBMotor = hardwareMap.get(DcMotor.class,"LBMotor");
+        LBMotor.setPower(0.1);
+        RFMotor.setPower(0.28);
+        LFMotor.setPower(0.1);
+        RBMotor.setPower(0.1);
+        LBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RFMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LFMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LBMotor.setTargetPosition(5000);
+        RFMotor.setTargetPosition(5000);
+        LFMotor.setTargetPosition(-5000);
+        RBMotor.setTargetPosition(5000);
+        LBMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        RFMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        LFMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        RBMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        
+        telemetry.addData("Mode", "waiting");
+        telemetry.update();
+
+
+
+        waitForStart();
+
+        telemetry.addData("Mode", "running");
+        telemetry.update();
+        
+        while (opModeIsActive() && LBMotor.isBusy())
+        {
+            telemetry.addData("encoder-fwd-left", LBMotor.getCurrentPosition() + "  busy=" + LBMotor.isBusy());
+            telemetry.addData("encoder-fwd-right", RFMotor.getCurrentPosition() + "  busy=" + RFMotor.isBusy());
+            telemetry.addData("encoder-fwd-right", LFMotor.getCurrentPosition() + "  busy=" + LFMotor.isBusy());
+            telemetry.addData("encoder-fwd-right", RBMotor.getCurrentPosition() + "  busy=" + RBMotor.isBusy());
+
+            telemetry.update();
+            idle();
+        }
+
+    }
+    
+} 
