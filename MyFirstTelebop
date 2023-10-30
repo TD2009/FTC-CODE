@@ -37,7 +37,7 @@ public class MyFirstTelebop extends LinearOpMode{
         telemetry.update();
         
         while (opModeIsActive()) { 
-            
+        
             double RtgtPowerY = 0;
             double RtgtPowerX = 0;
             double LtgtPowerY = 0;
@@ -91,12 +91,6 @@ public class MyFirstTelebop extends LinearOpMode{
             
             LeftArmServo.setPower(-LeftArmPower);
             RightArmServo.setPower(RightArmPower);
-            
-            
-            
-            
-            
-            
             
             //diagonal code thing Not workin rn
             ORtgtPowerX=gamepad2.right_stick_x;
