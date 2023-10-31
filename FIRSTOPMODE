@@ -43,13 +43,7 @@ public class FIRSTOPMODE extends LinearOpMode {
         LFMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         RBMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         
-        telemetry.addData("Mode", "waiting");
-        telemetry.update();
-
-        waitForStart();
-
-        telemetry.addData("Mode", "running");
-        telemetry.update();
+        SetUp();
         
         while (opModeIsActive() && LBMotor.isBusy())
         {
@@ -61,7 +55,5 @@ public class FIRSTOPMODE extends LinearOpMode {
             telemetry.update();
             idle();
         }
-
     }
-    
 } 
