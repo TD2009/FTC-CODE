@@ -24,17 +24,7 @@ public class MyFirstTelebop extends LinearOpMode{
         LeftArmServo = hardwareMap.get(CRServo.class,"LeftArmServo");
         RightArmServo = hardwareMap.get(CRServo.class,"RightArmServo");
         
-        telemetry.addData("Status","Running");
-        telemetry.update();
-        
-
-        telemetry.addData("Mode", "waiting");
-        telemetry.update();
-        
-        waitForStart();
-
-        telemetry.addData("Mode", "running");
-        telemetry.update();
+        SetUp();
         
         while (opModeIsActive()) { 
         
