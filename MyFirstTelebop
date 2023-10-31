@@ -5,6 +5,21 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+public class SetUpClass {
+   static void SetUp() {
+        telemetry.addData("Status","Running");
+        telemetry.update();
+        
+        telemetry.addData("Mode", "waiting");
+        telemetry.update();
+    
+        waitForStart();
+
+        telemetry.addData("Mode", "running");
+        telemetry.update();
+   }
+}
+
 @TeleOp
 
 public class MyFirstTelebop extends LinearOpMode{
