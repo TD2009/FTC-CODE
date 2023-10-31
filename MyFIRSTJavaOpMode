@@ -26,8 +26,8 @@ public class MyFIRSTJavaOpMode extends LinearOpMode {
         LFMotor = hardwareMap.get(DcMotor.class,"LFMotor");
         LBMotor = hardwareMap.get(DcMotor.class,"LBMotor");
         RBMotor.setDirection(DcMotor.Direction.REVERSE);
-        LBMotor.setPower(-0.1);
-        RFMotor.setPower(0.1);
+        LBMotor.setPower(-1);
+        RFMotor.setPower(1);
         LBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         RFMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         LBMotor.setTargetPosition(5000);
@@ -35,13 +35,7 @@ public class MyFIRSTJavaOpMode extends LinearOpMode {
         LBMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         RFMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         
-        telemetry.addData("Mode", "waiting");
-        telemetry.update();
-
-        waitForStart();
-
-        telemetry.addData("Mode", "running");
-        telemetry.update();
+        SetUp();
         
         while (opModeIsActive() && LBMotor.isBusy())
         {
