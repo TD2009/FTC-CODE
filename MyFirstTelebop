@@ -63,7 +63,7 @@ public class MyFirstTelebop extends LinearOpMode{
             RFMotor.setDirection(DcMotor.Direction.REVERSE);
             RBMotor.setDirection(DcMotor.Direction.REVERSE);
             
-            //diagonal code thing Not workin rn
+            //diagonal code thing
             RtgtPowerX=gamepad1.right_stick_x;
             if (gamepad1.right_stick_x>0) {
                 LBMotor.setPower(RtgtPowerX);
@@ -120,7 +120,7 @@ public class MyFirstTelebop extends LinearOpMode{
             LeftArmServo.setPower(-LeftArmPower);
             RightArmServo.setPower(RightArmPower);
             
-            //diagonal code thing Not workin rn
+            //diagonal code thing
             ORtgtPowerX=gamepad2.right_stick_x;
             if (gamepad2.right_stick_x>0) {
                 LBMotor.setPower(ORtgtPowerX);
