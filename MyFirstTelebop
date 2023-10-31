@@ -34,13 +34,15 @@ public class MyFirstTelebop extends LinearOpMode{
             double LtgtPowerX = 0;
             double LeftArmPower = 0;
             double RightArmPower = 0;
-        
+            double power = 0;
+
             double ORtgtPowerY = 0;
             double ORtgtPowerX = 0;
             double OLtgtPowerY = 0;
             double OLtgtPowerX = 0;
             double OLeftArmPower = 0;
             double ORightArmPower = 0;
+            double Opower = 0;
             
             LBMotor.setDirection(DcMotor.Direction.REVERSE);
             RFMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -55,6 +57,19 @@ public class MyFirstTelebop extends LinearOpMode{
                 LBMotor.setPower(RtgtPowerX);
                 RFMotor.setPower(RtgtPowerX);
             }
+                power = gamepad1.left_stick_x;
+
+                if (power<0) {
+                    LBMotor.setPower(power);
+                    LFMotor.setPower(-power);
+                    RBMotor.setPower(-power);
+                    RFMotor.setPower(power);
+                }else if (power>0) {
+                    LBMotor.setPower(-power);
+                    LFMotor.setPower(power);
+                    RBMotor.setPower(power);
+                    RFMotor.setPower(-power);
+                }
                 
             RtgtPowerY=gamepad1.right_stick_y;
             LBMotor.setPower(RtgtPowerY);
@@ -63,7 +78,8 @@ public class MyFirstTelebop extends LinearOpMode{
             RFMotor.setPower(RtgtPowerY);
             
             LtgtPowerY = gamepad1.left_stick_y;
-            LtgtPowerX = gamepad1.right_stick_x;
+            double Opower = gamepad1.left_stick_x;
+
             if (LtgtPowerY>0) {
                 LBMotor.setPower(LtgtPowerY);
                 LFMotor.setPower(LtgtPowerY);
@@ -97,8 +113,23 @@ public class MyFirstTelebop extends LinearOpMode{
             LFMotor.setPower(ORtgtPowerY);
             RBMotor.setPower(ORtgtPowerY);
             RFMotor.setPower(ORtgtPowerY);
-            
+
+            Opower = gamepad1.left_stick_x;
+            if (Opower<0) {
+                LBMotor.setPower(Opower);
+                LFMotor.setPower(-Opower);
+                RBMotor.setPower(-Opower);
+                RFMotor.setPower(Opower);
+            }else if (power>0) {
+                LBMotor.setPower(-Opower);
+                LFMotor.setPower(Opower);
+                RBMotor.setPower(Opower);
+                RFMotor.setPower(-Opower);
+            }
+
+
             OLtgtPowerY = gamepad1.left_stick_y;
+
             if (OLtgtPowerY>0) {
                 LBMotor.setPower(OLtgtPowerY);
                 LFMotor.setPower(OLtgtPowerY);
