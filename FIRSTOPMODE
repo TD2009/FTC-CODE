@@ -26,10 +26,10 @@ public class FIRSTOPMODE extends LinearOpMode {
         RBMotor = hardwareMap.get(DcMotor.class,"RBMotor");
         LFMotor = hardwareMap.get(DcMotor.class,"LFMotor");
         LBMotor = hardwareMap.get(DcMotor.class,"LBMotor");
-        LBMotor.setPower(0.1);
-        RFMotor.setPower(0.28);
-        LFMotor.setPower(0.1);
-        RBMotor.setPower(0.1);
+        LBMotor.setPower(1);
+        RFMotor.setPower(1);
+        LFMotor.setPower(1);
+        RBMotor.setPower(1);
         LBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         RFMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         LFMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -45,8 +45,6 @@ public class FIRSTOPMODE extends LinearOpMode {
         
         telemetry.addData("Mode", "waiting");
         telemetry.update();
-
-
 
         waitForStart();
 
