@@ -1,0 +1,171 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+@TeleOp
+
+public class MyFirstTelebop extends LinearOpMode{
+    private DcMotor RFMotor;
+    private DcMotor RBMotor;
+    private DcMotor LFMotor;
+    private DcMotor LBMotor;
+    private CRServo LeftArmServo;
+    private CRServo RightArmServo;
+    private CRServo Claw;
+    private DCMotor VMotor;
+    
+    @Override
+    public void runOpMode() {
+        //Defining
+        RFMotor = hardwareMap.get(DcMotor.class,"RFMotor");
+        RBMotor = hardwareMap.get(DcMotor.class,"RBMotor");
+        LFMotor = hardwareMap.get(DcMotor.class,"LFMotor");
+        LBMotor = hardwareMap.get(DcMotor.class,"LBMotor");
+        VMotor = harwareMap.get(DcMotor.class,"VMotor");
+        LeftArmServo = hardwareMap.get(CRServo.class,"LeftArmServo");
+        RightArmServo = hardwareMap.get(CRServo.class,"RightArmServo");
+        Claw = hardwareMap.get(CRServo.class,"Claw");
+        //end
+        //set up
+        telemetry.addData("Status","Running");
+        telemetry.update();
+        
+
+        telemetry.addData("Mode", "waiting");
+        telemetry.update();
+        
+        waitForStart();
+
+        telemetry.addData("Mode", "running");
+        telemetry.update();
+        //end
+        
+        while (opModeIsActive()) { 
+            //Power and variables set up
+            double RtgtPowerY = 0;
+            double RtgtPowerX = 0;
+            double LtgtPowerY = 0;
+            double LtgtPowerX = 0;
+            double LeftArmPower = 0;
+            double RightArmPower = 0;
+        
+            double ORtgtPowerY = 0;
+            double ORtgtPowerX = 0;
+            double OLtgtPowerY = 0;
+            double OLtgtPowerX = 0;
+            double OLeftArmPower = 0;
+            double ORightArmPower = 0;
+            //end
+            
+            //Driving motors set up
+            LBMotor.setDirection(DcMotor.Direction.REVERSE);
+            RFMotor.setDirection(DcMotor.Direction.REVERSE);
+            RBMotor.setDirection(DcMotor.Direction.REVERSE);
+            //end
+            
+            //diagonal code thing
+            RtgtPowerX=gamepad1.right_stick_x;
+            if (gamepad1.right_stick_x>0) {
+                LBMotor.setPower(RtgtPowerX);
+                RFMotor.setPower(RtgtPowerX);
+            }else if (gamepad1.right_stick_x<0) {
+                LBMotor.setPower(RtgtPowerX);
+                RFMotor.setPower(RtgtPowerX);
+            }
+            //end
+            
+            //going straight
+            RtgtPowerY=gamepad1.right_stick_y;
+            LBMotor.setPower(RtgtPowerY);
+            LFMotor.setPower(RtgtPowerY);
+            RBMotor.setPower(RtgtPowerY);
+            RFMotor.setPower(RtgtPowerY);
+            //end
+            
+            LtgtPowerY = gamepad1.left_stick_y;
+            LtgtPowerX = gamepad1.right_stick_x;
+            
+            if (LtgtPowerY>0) {
+                LBMotor.setPower(LtgtPowerY);
+                LFMotor.setPower(LtgtPowerY);
+                RBMotor.setPower(-LtgtPowerY);
+                RFMotor.setPower(-LtgtPowerY);
+            }
+            
+            if (LtgtPowerY<0) {
+                LBMotor.setPower(LtgtPowerY);
+                LFMotor.setPower(LtgtPowerY);
+                RBMotor.setPower(-LtgtPowerY);
+                RFMotor.setPower(-LtgtPowerY);
+            }
+            
+            
+            //diagonal code thing
+            ORtgtPowerX=gamepad2.right_stick_x;
+            if (gamepad2.right_stick_x>0) {
+                LBMotor.setPower(ORtgtPowerX);
+                RFMotor.setPower(ORtgtPowerX);
+            }else if (gamepad2.right_stick_x<0) {
+                LBMotor.setPower(ORtgtPowerX);
+                RFMotor.setPower(ORtgtPowerX);
+            }
+                
+            ORtgtPowerY=gamepad2.right_stick_y;
+            LBMotor.setPower(ORtgtPowerY);
+            LFMotor.setPower(ORtgtPowerY);
+            RBMotor.setPower(ORtgtPowerY);
+            RFMotor.setPower(ORtgtPowerY);
+            
+            OLtgtPowerY = gamepad1.left_stick_y;
+            if (OLtgtPowerY>0) {
+                LBMotor.setPower(OLtgtPowerY);
+                LFMotor.setPower(OLtgtPowerY);
+                RBMotor.setPower(-OLtgtPowerY);
+                RFMotor.setPower(-OLtgtPowerY);
+            }
+
+            if (OLtgtPowerY<0) {
+                LBMotor.setPower(OLtgtPowerY);
+                LFMotor.setPower(OLtgtPowerY);
+                RBMotor.setPower(-OLtgtPowerY);
+                RFMotor.setPower(-OLtgtPowerY);
+            }
+            
+            //Moving Arm and everything like the Viper and claw
+            if (gamepad1.right_bumper) {
+                RightArmServo.setPower(0.5);
+                LeftArmServo.setPower(-0.5);
+            }
+            if (gamepad1.left_bumper) {
+                RightArmServo.setPower(-0.5);
+                LeftArmServo.setPower(0.5);  
+            }
+            //end
+            
+            //Claw
+            if (gamepad1.right_trigger) {
+                Claw.setPower(gamepad1.right_trigger);
+            } else if (gamepad1.left_trigger) {
+                Claw.setPower(-gamepad1.left_trigger);
+            }
+            //end
+            
+            //Viper
+            if (gamepad1.dpad_up) {
+                VMotor.setPower(0.5);
+            } else if (gamepad1.dpad_down) {
+                VMotor.setPower(-0.5);
+            }
+
+            if (gamepad2.dpad_up) {
+                VMotor.setPower(0.5);
+            } else if (gamepad2.dpad_down) {
+                VMotor.setPower(-0.5);
+            }
+            //end
+        }
+    }
+} 
