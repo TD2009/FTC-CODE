@@ -5,120 +5,128 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-public class SetUpClass {
-   static void SetUp() {
-        telemetry.addData("Status","Running");
-        telemetry.update();
-        
-        telemetry.addData("Mode", "waiting");
-        telemetry.update();
-    
-        waitForStart();
-
-        telemetry.addData("Mode", "running");
-        telemetry.update();
-   }
-}
-
 @TeleOp
 
 public class MyFirstTelebop extends LinearOpMode{
+    
     private DcMotor RFMotor;
     private DcMotor RBMotor;
     private DcMotor LFMotor;
     private DcMotor LBMotor;
+    //private DcMotor VMotor;
+    
     private CRServo LeftArmServo;
     private CRServo RightArmServo;
+    private CRServo Claw;
+    private CRServo FServo;
     
     @Override
     public void runOpMode() {
+        //Defining
         RFMotor = hardwareMap.get(DcMotor.class,"RFMotor");
         RBMotor = hardwareMap.get(DcMotor.class,"RBMotor");
         LFMotor = hardwareMap.get(DcMotor.class,"LFMotor");
         LBMotor = hardwareMap.get(DcMotor.class,"LBMotor");
+        //VMotor = hardwareMap.get(DcMotor.class,"VMotor");
         LeftArmServo = hardwareMap.get(CRServo.class,"LeftArmServo");
         RightArmServo = hardwareMap.get(CRServo.class,"RightArmServo");
+        FServo = hardwareMap.get(CRServo.class,"FServo");
+        Claw = hardwareMap.get(CRServo.class,"Claw");
+        //end
+        //set up
+        telemetry.addData("Status","Running");
+        telemetry.update();
         
-        SetUp();
+
+        telemetry.addData("Mode", "waiting");
+        telemetry.update();
+        
+        waitForStart();
+
+        telemetry.addData("Mode", "running");
+        telemetry.update();
+        FServo.setPower(0);//Set up for flight
+
+        //end
         
         while (opModeIsActive()) { 
-        
+            //Power and variables set up
             double RtgtPowerY = 0;
             double RtgtPowerX = 0;
             double LtgtPowerY = 0;
             double LtgtPowerX = 0;
             double LeftArmPower = 0;
             double RightArmPower = 0;
-            double power = 0;
-
+        
             double ORtgtPowerY = 0;
             double ORtgtPowerX = 0;
             double OLtgtPowerY = 0;
             double OLtgtPowerX = 0;
             double OLeftArmPower = 0;
             double ORightArmPower = 0;
-            double Opower = 0;
+
+            //end
             
+            //Driving motors set up
             LBMotor.setDirection(DcMotor.Direction.REVERSE);
             RFMotor.setDirection(DcMotor.Direction.REVERSE);
             RBMotor.setDirection(DcMotor.Direction.REVERSE);
+            //end
             
             //diagonal code thing
             RtgtPowerX=gamepad1.right_stick_x;
             if (gamepad1.right_stick_x>0) {
                 LBMotor.setPower(RtgtPowerX);
                 RFMotor.setPower(RtgtPowerX);
-            }else if (gamepad1.right_stick_x<0) {
-                LBMotor.setPower(RtgtPowerX);
-                RFMotor.setPower(RtgtPowerX);
+            } else if (gamepad1.right_stick_x<0) {
+                LFMotor.setPower(RtgtPowerX);
+                RBMotor.setPower(RtgtPowerX);
             }
-                power = gamepad1.left_stick_x;
-
-                if (power<0) {
-                    LBMotor.setPower(power);
-                    LFMotor.setPower(-power);
-                    RBMotor.setPower(-power);
-                    RFMotor.setPower(power);
-                }else if (power>0) {
-                    LBMotor.setPower(-power);
-                    LFMotor.setPower(power);
-                    RBMotor.setPower(power);
-                    RFMotor.setPower(-power);
-                }
-                
+            //end
+            
+            //side to side ITS THE EXACT SAME CODE ON BOTH HOW DA HAIL DOES THIS WORK????
+            LtgtPowerX=gamepad1.left_stick_x;
+            if (LtgtPowerX!=0 && LtgtPowerX>0) {
+                    LBMotor.setPower(LtgtPowerX);
+                    LFMotor.setPower(-LtgtPowerX);
+                    RBMotor.setPower(-LtgtPowerX);
+                    RFMotor.setPower(LtgtPowerX);    
+            }
+            if (LtgtPowerX != 0 && LtgtPowerX<0) {
+                LBMotor.setPower(LtgtPowerX);
+                LFMotor.setPower(-LtgtPowerX);
+                RBMotor.setPower(-LtgtPowerX);
+                RFMotor.setPower(LtgtPowerX);
+                telemetry.addData("No me gusta","No bueno");
+                telemetry.update();
+            }
+            //end
+            
+            //going straight
             RtgtPowerY=gamepad1.right_stick_y;
             LBMotor.setPower(RtgtPowerY);
             LFMotor.setPower(RtgtPowerY);
             RBMotor.setPower(RtgtPowerY);
             RFMotor.setPower(RtgtPowerY);
+            //end
             
             LtgtPowerY = gamepad1.left_stick_y;
-            double Opower = gamepad1.left_stick_x;
-
+            LtgtPowerX = gamepad1.right_stick_x;
+            
             if (LtgtPowerY>0) {
                 LBMotor.setPower(LtgtPowerY);
                 LFMotor.setPower(LtgtPowerY);
                 RBMotor.setPower(-LtgtPowerY);
                 RFMotor.setPower(-LtgtPowerY);
             }
+            
             if (LtgtPowerY<0) {
                 LBMotor.setPower(LtgtPowerY);
                 LFMotor.setPower(LtgtPowerY);
                 RBMotor.setPower(-LtgtPowerY);
                 RFMotor.setPower(-LtgtPowerY);
             }
-
-            if (gamepad1.dpad_up) {
-                RFMotor.setPower(0.5);
-            } else if (gamepad1.dpad_down) {
-                RFMotor.setPower(-0.5);
-            }
-
-            LeftArmPower = gamepad1.left_trigger;
-            RightArmPower = gamepad1.right_trigger;
             
-            LeftArmServo.setPower(-LeftArmPower);
-            RightArmServo.setPower(RightArmPower);
             
             //diagonal code thing
             ORtgtPowerX=gamepad2.right_stick_x;
@@ -135,45 +143,57 @@ public class MyFirstTelebop extends LinearOpMode{
             LFMotor.setPower(ORtgtPowerY);
             RBMotor.setPower(ORtgtPowerY);
             RFMotor.setPower(ORtgtPowerY);
-
-            Opower = gamepad1.left_stick_x;
-            if (Opower<0) {
-                LBMotor.setPower(Opower);
-                LFMotor.setPower(-Opower);
-                RBMotor.setPower(-Opower);
-                RFMotor.setPower(Opower);
-            }else if (power>0) {
-                LBMotor.setPower(-Opower);
-                LFMotor.setPower(Opower);
-                RBMotor.setPower(Opower);
-                RFMotor.setPower(-Opower);
-            }
-
-
+            
             OLtgtPowerY = gamepad1.left_stick_y;
-
             if (OLtgtPowerY>0) {
                 LBMotor.setPower(OLtgtPowerY);
                 LFMotor.setPower(OLtgtPowerY);
                 RBMotor.setPower(-OLtgtPowerY);
                 RFMotor.setPower(-OLtgtPowerY);
             }
+
             if (OLtgtPowerY<0) {
                 LBMotor.setPower(OLtgtPowerY);
                 LFMotor.setPower(OLtgtPowerY);
                 RBMotor.setPower(-OLtgtPowerY);
                 RFMotor.setPower(-OLtgtPowerY);
             }
-            if (gamepad2.dpad_up) {
-                RFMotor.setPower(0.5);
-            } else if (gamepad2.dpad_down) {
-                RFMotor.setPower(-0.5);
+
+            //Moving Arm and everything like the Viper and claw
+            if (gamepad1.right_bumper) {
+                RightArmServo.setPower(0.5);
+                LeftArmServo.setPower(-0.5);
             }
-            OLeftArmPower = gamepad2.left_trigger;
-            ORightArmPower = gamepad2.right_trigger;
+            if (gamepad1.left_bumper) {
+                RightArmServo.setPower(-0.5);
+                LeftArmServo.setPower(0.5);  
+            }
+            //end
             
-            LeftArmServo.setPower(-OLeftArmPower);
-            RightArmServo.setPower(ORightArmPower);
+            //claw
+
+            if (gamepad1.right_trigger != 0) {
+                Claw.setPower(-1);
+            } else if (gamepad1.left_trigger != 0) {
+                Claw.setPower(0.6);
+            }
+            
+            //end
+            //flight
+            if (gamepad1.dpad_left) {
+                FServo.setPower(0.5);
+            }else if (gamepad1.dpad_right) {
+                FServo.setPower(-0.2);
+            }
+            //end
+            /*
+            //Viper DON'T HAVE WIRE SO DOESN'T WORK
+            if (gamepad1.dpad_up) {
+                VMotor.setPower(0.5);
+            } else if (gamepad1.dpad_down) {
+                VMotor.setPower(-0.5);
+            }*/
+            //end
         }
     }
-} 
+}
