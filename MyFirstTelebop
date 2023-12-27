@@ -98,7 +98,7 @@ public class MyFirstTelebop extends LinearOpMode{
             }
             //end
             
-            //side to side ITS THE EXACT SAME CODE ON BOTH HOW DA HAIL DOES THIS WORK????
+            //side to side
             LtgtPowerX=gamepad1.left_stick_x;
             if (LtgtPowerX!=0 && LtgtPowerX>0) {
                     LBMotor.setPower(LtgtPowerX);
