@@ -1,29 +1,32 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @TeleOp
 
-public class MyFirstTelebop extends LinearOpMode{
+public class TwoGamepad extends LinearOpMode{
     
+    private int ArmTarget = 0;
+    private int LiftTarget = 0;
+    
+    private int OArmTarget = 0;
+    private int OLiftTarget = 0;
+
     private DcMotor RFMotor;
     private DcMotor RBMotor;
     private DcMotor LFMotor;
     private DcMotor LBMotor;
-    private DcMotor VMotor;
-    private DcMotor RAMotor;
-    private DcMotor LAMotor;
+    private DcMotorEx VMotor;
+    //private DcMotorEx RAMotor;
+    //private DcMotorEx LAMotor;
     
     private CRServo Claw;
     private CRServo FServo;
-    
-    private int rotationMoving = 28;//not used
-    private double gearRatio = 50.9;//not used
-    private int ticksPerRev = 28;//not used
-    
+
     @Override
     public void runOpMode() {
         //Defining
@@ -31,31 +34,37 @@ public class MyFirstTelebop extends LinearOpMode{
         RBMotor = hardwareMap.get(DcMotor.class,"RBMotor");
         LFMotor = hardwareMap.get(DcMotor.class,"LFMotor");
         LBMotor = hardwareMap.get(DcMotor.class,"LBMotor");
-        VMotor = hardwareMap.get(DcMotor.class,"VMotor");
-        RAMotor = hardwareMap.get(DcMotor.class,"RAMotor");
-        LAMotor = hardwareMap.get(DcMotor.class,"LAMotor");
+        VMotor = hardwareMap.get(DcMotorEx.class,"VMotor");
+        //RAMotor = hardwareMap.get(DcMotorEx.class,"RAMotor");
+        //LAMotor = hardwareMap.get(DcMotorEx.class,"LAMotor");
 
-        VMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        VMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        LAMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        LAMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        RAMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        RAMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        VMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        VMotor.setDirection(DcMotorEx.Direction.REVERSE);
+        VMotor.setTargetPosition(0);
+        VMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        //LAMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        
+        //LAMotor.setTargetPosition(0);
+        //LAMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        
+        //RAMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        //RAMotor.setTargetPosition(0);
+        //RAMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        
+        //LAMotor.setDirection(DcMotorEx.Direction.REVERSE);
         FServo = hardwareMap.get(CRServo.class,"FServo");
         Claw = hardwareMap.get(CRServo.class,"Claw");
         //end
         //set up
         telemetry.addData("Status","Running");
-        telemetry.update();
-        
 
         telemetry.addData("Mode", "waiting");
-        telemetry.update();
+
         
         waitForStart();
 
         telemetry.addData("Mode", "running");
-        telemetry.update();
+ 
 
         //end
         
@@ -67,6 +76,13 @@ public class MyFirstTelebop extends LinearOpMode{
             double LtgtPowerX = 0;
             double LeftArmPower = 0;
             double RightArmPower = 0;
+            
+            double ORtgtPowerY = 0;
+            double ORtgtPowerX = 0;
+            double OLtgtPowerY = 0;
+            double OLtgtPowerX = 0;
+            double OLeftArmPower = 0;
+            double ORightArmPower = 0;
 
 
             //end
@@ -98,7 +114,28 @@ public class MyFirstTelebop extends LinearOpMode{
             }
             //end
             
-            //side to side
+            //diagonal code thing
+            ORtgtPowerX=gamepad2.right_stick_x;
+            ORtgtPowerY=gamepad2.right_stick_y;
+            double OrealPower = (RtgtPowerX + RtgtPowerY) / 2;
+            if (gamepad2.right_stick_x>0 && gamepad2.right_stick_y>0) {
+                LFMotor.setPower(OrealPower);
+                RBMotor.setPower(OrealPower);
+            }
+            if (gamepad2.right_stick_x<0 && gamepad2.right_stick_y>0) {
+                LBMotor.setPower(OrealPower);
+                RFMotor.setPower(OrealPower);
+            }
+            if (gamepad2.right_stick_x>0 && gamepad2.right_stick_y<0) {
+                RFMotor.setPower(-OrealPower);
+                LBMotor.setPower(-OrealPower);
+            }
+            if (gamepad2.right_stick_x<0 && gamepad2.right_stick_y<0) {
+                LFMotor.setPower(-OrealPower);
+                RBMotor.setPower(-OrealPower);
+            }
+            //end
+            
             LtgtPowerX=gamepad1.left_stick_x;
             if (LtgtPowerX!=0 && LtgtPowerX>0) {
                     LBMotor.setPower(LtgtPowerX);
@@ -111,8 +148,23 @@ public class MyFirstTelebop extends LinearOpMode{
                 LFMotor.setPower(-LtgtPowerX);
                 RBMotor.setPower(-LtgtPowerX);
                 RFMotor.setPower(LtgtPowerX);
-                telemetry.addData("No me gusta","No bueno");
-                telemetry.update();
+
+            }
+            
+            //side to side ITS THE EXACT SAME CODE ON BOTH HOW DA HAIL DOES THIS WORK????
+            OLtgtPowerX=gamepad2.left_stick_x;
+            if (OLtgtPowerX!=0 && OLtgtPowerX>0) {
+                    LBMotor.setPower(OLtgtPowerX);
+                    LFMotor.setPower(-OLtgtPowerX);
+                    RBMotor.setPower(-OLtgtPowerX);
+                    RFMotor.setPower(OLtgtPowerX);    
+            }
+            if (OLtgtPowerX != 0 && OLtgtPowerX<0) {
+                LBMotor.setPower(OLtgtPowerX);
+                LFMotor.setPower(-OLtgtPowerX);
+                RBMotor.setPower(-OLtgtPowerX);
+                RFMotor.setPower(OLtgtPowerX);
+
             }
             //end
             
@@ -142,42 +194,18 @@ public class MyFirstTelebop extends LinearOpMode{
             }
 
             //Moving Arm and everything like the Viper and claw
-
-            while (gamepad1.right_bumper) {
-                RAMotor.setPower(0.1);
-                LAMotor.setPower(-0.1);
+            if(gamepad1.right_bumper){
+                ArmTarget += 5;
+            }else if(gamepad1.left_bumper){
+                ArmTarget -= 1;
             }
-            while (gamepad1.left_bumper) {
-                RAMotor.setPower(-0.1);
-                LAMotor.setPower(0.1);
-            }
-            RAMotor.setPower(0);
             
-            while (gamepad1.left_bumper) {
-                LAMotor.setTargetPosition(0);
-                RAMotor.setTargetPosition(0);
-                LAMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                RAMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                LAMotor.setPower(0.1);
-                RAMotor.setPower(0.1);
+            if(ArmTarget > 75){
+                ArmTarget = 75;
+            }else if(ArmTarget < 5){
+                ArmTarget = 5;
+            }
 
-            }
-            while (gamepad1.right_bumper) {
-                LAMotor.setTargetPosition(-3027);
-                RAMotor.setTargetPosition(-3027);
-                LAMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                RAMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                LAMotor.setPower(0.1);
-                RAMotor.setPower(0.1);
-            }
-            telemetry.addData("Encoder value", LAMotor.getCurrentPosition());
-            telemetry.update();
-            telemetry.addData("Encoder value", RAMotor.getCurrentPosition());
-            telemetry.update();
-            LAMotor.setPower(0);
-            RAMotor.setPower(0);
-            //end
-            
             //claw
             
             if (gamepad1.right_trigger != 0) {
@@ -196,19 +224,107 @@ public class MyFirstTelebop extends LinearOpMode{
             }
             //end
             
-            //Viper DON'T HAVE WIRE SO DOESN'T WORK
+            //Viper
+            if(gamepad1.dpad_up){
+                LiftTarget += 30;
+            }else if(gamepad1.dpad_down){
+                LiftTarget -= 30;
+            }
+            
+            //going straight
+            ORtgtPowerY=gamepad2.right_stick_y;
+            LBMotor.setPower(ORtgtPowerY);
+            LFMotor.setPower(ORtgtPowerY);
+            RBMotor.setPower(ORtgtPowerY);
+            RFMotor.setPower(ORtgtPowerY);
+            //end
+            
+            OLtgtPowerY = gamepad2.left_stick_y;
+            OLtgtPowerX = gamepad2.right_stick_x;
+            
+            if (OLtgtPowerY>0) {
+                LBMotor.setPower(OLtgtPowerY);
+                LFMotor.setPower(OLtgtPowerY);
+                RBMotor.setPower(-OLtgtPowerY);
+                RFMotor.setPower(-OLtgtPowerY);
+            }
+            
+            if (OLtgtPowerY<0) {
+                LBMotor.setPower(OLtgtPowerY);
+                LFMotor.setPower(OLtgtPowerY);
+                RBMotor.setPower(-OLtgtPowerY);
+                RFMotor.setPower(-OLtgtPowerY);
+            }
 
-            while (gamepad1.dpad_up) {
-                VMotor.setTargetPosition(0);
-                VMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                VMotor.setPower(1);
+            //Moving Arm and everything like the Viper and claw
+            if(gamepad2.right_bumper){
+                OArmTarget += 5;
+            }else if(gamepad2.left_bumper){
+                OArmTarget -= 1;
             }
-            while (gamepad1.dpad_down) {
-                VMotor.setTargetPosition(-3027);
-                VMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                VMotor.setPower(1);
+            
+            if(OArmTarget > 75){
+                OArmTarget = 75;
+            }else if(OArmTarget < 5){
+                OArmTarget = 5;
             }
-            VMotor.setPower(0);
+            /*
+            LAMotor.setTargetPosition(OArmTarget);
+            RAMotor.setTargetPosition(OArmTarget);
+            
+            telemetry.addData("LA Encoder value", LAMotor.getCurrentPosition());
+            telemetry.addData("RA Encoder value", RAMotor.getCurrentPosition());
+
+            LAMotor.setVelocity(1000);
+            RAMotor.setVelocity(1000);
+            
+            
+        
+            
+            
+            //end
+            */
+            //claw
+            
+            if (gamepad2.right_trigger != 0) {
+                Claw.setPower(-1);
+            } else if (gamepad2.left_trigger != 0) {
+                Claw.setPower(0.6);
+            }
+            
+            
+            //end
+            //flight
+            if (gamepad2.dpad_left) {
+                FServo.setPower(1);
+            }else if (gamepad2.dpad_right) {
+                FServo.setPower(-1);
+            }
+            //end
+            
+            //Viper
+            if(gamepad2.dpad_up){
+                OLiftTarget += 30;
+            }else if(gamepad2.dpad_down){
+                OLiftTarget -= 30;
+            }     
+            
+            
+            
+            
+            
+            
+            if(OLiftTarget > 3000){
+                OLiftTarget = 3000;
+            }else if(OLiftTarget < 0){
+                OLiftTarget = 0;
+            }
+            
+            VMotor.setTargetPosition(OLiftTarget);
+
+            VMotor.setVelocity(6000);
+            
+
 
             telemetry.addData("Encoder value", VMotor.getCurrentPosition());
             telemetry.update();
