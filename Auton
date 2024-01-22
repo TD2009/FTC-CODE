@@ -1,0 +1,83 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotor;
+
+@Autonomous 
+
+public class AutonomousRizz extends LinearOpMode {
+
+    private DcMotor LBMotor;
+    private DcMotor LFMotor;
+    private DcMotor RBMotor;
+    private DcMotor RFMotor;
+
+    private static final double COUNTS_PER_REV = 1440;
+    private static final double WHEEL_DIAMETER_INCHES = 3.75;
+    private static final double COUNTS_PER_INCH = COUNTS_PER_REV / (WHEEL_DIAMETER_INCHES * 3.141592);
+
+    @Override
+    public void runOpMode() {
+
+        LFMotor = hardwareMap.dcMotor.get("LFMotor");
+        LBMotor = hardwareMap.dcMotor.get("LBMotor");
+        RFMotor = hardwareMap.dcMotor.get("RFMotor");
+        RBMotor = hardwareMap.dcMotor.get("RBMotor");
+        
+        RBMotor.setDirection(DcMotor.Direction.REVERSE);
+        RFMotor.setDirection(DcMotor.Direction.REVERSE);
+
+        waitForStart();
+
+        moveForward(24);
+
+        stop();
+    }
+
+    private void moveForward(double inches) {
+        // Calculate target encoder counts
+        int targetCounts = (int) (inches * COUNTS_PER_INCH);
+
+        // Reset encoders
+        LFMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RFMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        // Set target position
+        LFMotor.setTargetPosition(-targetCounts);
+        RFMotor.setTargetPosition(targetCounts);
+        LBMotor.setTargetPosition(targetCounts);
+        RBMotor.setTargetPosition(-targetCounts);
+
+        LFMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        RFMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        LFMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        RFMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        
+        LFMotor.setPower(-0.5);
+        RFMotor.setPower(0.5);
+        LBMotor.setPower(0.5);
+        RBMotor.setPower(-0.5);
+        
+        while (opModeIsActive() && (LFMotor.isBusy() || LBMotor.isBusy() || RFMotor.isBusy() || RBMotor.isBusy())) {
+
+            telemetry.addData("Status", "Moving");
+            telemetry.update();
+        }
+
+        LFMotor.setPower(0);
+        LBMotor.setPower(0);
+        RFMotor.setPower(0);
+        RBMotor.setPower(0);
+        
+        LFMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        LBMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        RFMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        RBMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        
+    }
+}
